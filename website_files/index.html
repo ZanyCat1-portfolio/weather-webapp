@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Index</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/utilities.css">
+</head>
+
+<body onload="currentBtnClick(), getWeatherForecasts()">
+    <div id="container">
+        <h1>Current Weather</h1>
+        <section id="current-input">
+            <p>
+                <form>
+                    <label for="city-current">City:</label>
+                    <input type="text" id="city-current" name="city-current" value="83605">
+                    <span class="error-msg hidden" id="error-value-city-current">Enter a city</span>
+                    <button id="currentBtn" onclick="event.preventDefault()">Get Current Weather/AQI</button>
+                </form>
+            </p>
+        </section>
+        <div>
+            <section class="grid hidden" id="current">
+                <div class="column">
+                    <section>
+                        <table>
+                        <caption>Air Quality Index</caption>
+                        <p style="display: hidden"></p>
+                        <p style="display: hidden"></p>
+                            <tr id="indexDiv">
+                                <td>
+                                    <div id="indexSpan"></div>
+                                    <div id="concernSpan"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Location: </span><span id="locationSpan"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Updated: </span><span id="timeSpan"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                </div>
+    
+                <div class="column">
+                    <section>
+                        <table id="results-city-current">
+                            <caption id="city-current-name"></caption>
+                            <div id="now-city-current"></div>
+                            <p id="loading-city-current">Loading...</p>
+                            <p id="error-loading-city-current" class="error-msg"></p>
+                        <tr>
+                            <td id="city-current-temp"></td>
+                        </tr>
+                        <tr>
+                            <td><img id="city-current-image"></td>
+                        </tr>
+                        </table>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="container">
+        <h1>24-Hour Forecast</h1>
+        <section id="hourly" class="hidden">
+            <p id="loading-city-hourly">Loading...</p>
+            <p id="error-loading-city-hourly" class="error-msg"></p>
+            <table id="results-city-hourly">
+            <tr>
+                <td id="city-hourly-time0-name"></td>
+                <td id="city-hourly-time1-name"></td>
+                <td id="city-hourly-time2-name"></td>
+                <td id="city-hourly-time3-name"></td>
+                <td id="city-hourly-time4-name"></td>
+                <td id="city-hourly-time5-name"></td>
+                <td id="city-hourly-time6-name"></td>
+                <td id="city-hourly-time7-name"></td>
+            </tr>
+            <tr>
+                <td id="city-hourly-temp0-name"></td>
+                <td id="city-hourly-temp1-name"></td>
+                <td id="city-hourly-temp2-name"></td>
+                <td id="city-hourly-temp3-name"></td>
+                <td id="city-hourly-temp4-name"></td>
+                <td id="city-hourly-temp5-name"></td>
+                <td id="city-hourly-temp6-name"></td>
+                <td id="city-hourly-temp7-name"></td>
+            </tr>
+            <tr>
+                <td><img id="city-hourly-image0-name"></td>
+                <td><img id="city-hourly-image1-name"></td>
+                <td><img id="city-hourly-image2-name"></td>
+                <td><img id="city-hourly-image3-name"></td>
+                <td><img id="city-hourly-image4-name"></td>
+                <td><img id="city-hourly-image5-name"></td>
+                <td><img id="city-hourly-image6-name"></td>
+                <td><img id="city-hourly-image7-name"></td>
+            </tr>
+            <tr>
+                <td id="city-hourly0-pop"></td>
+                <td id="city-hourly1-pop"></td>
+                <td id="city-hourly2-pop"></td>
+                <td id="city-hourly3-pop"></td>
+                <td id="city-hourly4-pop"></td>
+                <td id="city-hourly5-pop"></td>
+                <td id="city-hourly6-pop"></td>
+                <td id="city-hourly7-pop"></td>
+            </tr>
+            </table>
+        </section>
+    </div>    
+
+    <div id="container">
+        <h1>5 Day Forecast</h1>
+        <section id="forecast" class="hidden">
+            <p id="loading-city">Loading...</p>
+            <p id="error-loading-city" class="error-msg"></p>
+            <table id="results-city">
+            <tr>
+                <td id="city-day0-name"></td>
+                <td id="city-day1-name"></td>
+                <td id="city-day2-name"></td>
+                <td id="city-day3-name"></td>
+                <td id="city-day4-name"></td>
+                <td id="city-day5-name"></td>
+            </tr>
+            <tr>
+                <td id="city-day0-high"></td>
+                <td id="city-day1-high"></td>
+                <td id="city-day2-high"></td>
+                <td id="city-day3-high"></td>
+                <td id="city-day4-high"></td>
+                <td id="city-day5-high"></td>
+            </tr>
+            <tr>
+                <td id="city-day0-low"></td>
+                <td id="city-day1-low"></td>
+                <td id="city-day2-low"></td>
+                <td id="city-day3-low"></td>
+                <td id="city-day4-low"></td>
+                <td id="city-day5-low"></td>
+            </tr>
+            <tr>
+                <td><img id="city-day0-image"></td>
+                <td><img id="city-day1-image"></td>
+                <td><img id="city-day2-image"></td>
+                <td><img id="city-day3-image"></td>
+                <td><img id="city-day4-image"></td>
+                <td><img id="city-day5-image"></td>
+            </tr>
+            <tr>
+                <td id="city-day0-pop"></td>
+                <td id="city-day1-pop"></td>
+                <td id="city-day2-pop"></td>
+                <td id="city-day3-pop"></td>
+                <td id="city-day4-pop"></td>
+                <td id="city-day5-pop"></td>
+            </tr>
+            </table>
+        </section>
+    </div>    
+</body>
+
+<script src="scripts/sharedFuncs.js" defer></script>
+<script src="scripts/aqi.js" defer></script>
+<script src="scripts/weatherNow.js" defer></script>
+<script src="scripts/weatherHourly.js" defer></script>
+<script src="scripts/weather5days.js" defer></script>
+
+</html>

@@ -1,0 +1,50 @@
+/* body {
+    width: 100vw;
+    height: 100vh;
+} */
+
+#container {
+    min-width: 600px;
+    min-height: 410px;
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid black;
+    padding: 2%;
+    text-align: center;
+}
+
+#indexDiv {
+    margin: auto;
+    width: 175px;
+    border: 5px solid white;
+}
+
+#indexSpan {
+    font-size: 2em;
+}
+
+
+table {
+    width: 100%;
+}
+
+.grid {
+    display: flex;
+}
+
+.column{
+    /* display: flex; */
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+/* 
+.light {
+    background-color: white;
+    color: black
+}
+
+.dark {
+    background-color: black;
+    color: white
+} */
