@@ -17,38 +17,22 @@ function currentBtnClick() {
 }
 
 async function getWeatherNow(city, cityId) {
-   // Create a URL to access the web API
-
-   /* old config inside this block
-   const queryString = "q=" + encodeURI(city) + ",US&units=imperial&appid=" + key2;
-   const url = weatherEndpoint + "?" + queryString;
-
-   const response = await fetch(url);
-   old config inside this block*/
-
-
-   // trying to send request to back end
-   // then back end attaches key and sends to api
-   // then delivers the response back here 
-
    const queryString = "q=" + encodeURI(city) + ",US&units=imperial"; 
    const url = weatherProxyEndPoint + weatherEndpoint + "?" + queryString;
-   
-   // console.log("now url is")
-   // console.log(url)
 
    const response = await fetch(url);
-
-   // console.log('now response is')
-   // console.log(response)
 
    hideElement("loading-" + cityId);
 
    if (response.ok) {
+      // for current weather
       const jsonResult = await response.json();
+      displayWeather(cityId, jsonResult);
+
+      // for aqi
       coords = {'lat': jsonResult.coord.lat, 'lon': jsonResult.coord.lon};
       getData(coords);
-      displayWeather(cityId, jsonResult);
+      
    }
    else {
       const errorId = "error-loading-" + cityId;

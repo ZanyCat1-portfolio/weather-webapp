@@ -71,11 +71,9 @@ async function getData(coords) {
         }
     }
     else {
-        console.log('here?');
         concernSpan.innerText = `Unable to load city "${city.value}"`;
         locationSpan.innerText = "";
         timeSpan.innerText = "";
         indexDiv.setAttribute('style', 'background-color: pink');
-
     }
 }

@@ -1,56 +1,11 @@
-function forecastBtnClick() {
-   // weather5DayDate.innerHTML = new Date().toDateString() + " " + new Date().toTimeString().split(' ')[0]
-
-   const city = document.getElementById("city-current").value.trim();
-
-   city.length === 0 ? showElement("error-value-city") : 0
-
-   if (city.length > 0) {
-      showElement("forecast");
-      hideElement("error-loading-city");
-      showElement("loading-city");
-      showMessage("loading-city", `Loading ${city-current}...`);
-      hideElement("results-city");
-      
-      getWeatherForecast(city, "city");
-   }
-}
-
-async function getWeatherForecast(city, cityId) {
-   // Create a URL to access the web API
-   const queryString = "q=" + encodeURI(city) + ",US&units=imperial";
-   const url = weatherProxyEndPoint + forecastEndpoint + "?" + queryString;
-
-   console.log("5day url is")
-   console.log(url)
-
-   const response = await fetch(url);
-
-   console.log('5day response is')
-   console.log(response)
-
-   hideElement("loading-" + cityId);
-
-   if (response.ok) {
-      const jsonResult = await response.json();
-      displayForecast(cityId, jsonResult);
-   }
-   else {
-      const errorId = "error-loading-" + cityId;
-      showElement(errorId);
-      showMessage(errorId, `Unable to load city "${city}".`);
-   }
-}
-
-function displayForecast(cityId, jsonResult) {
+async function display5Day(cityId, jsonResult) {
    showElement("results-" + cityId);
 
    const cityName = jsonResult.city.name
    const countryName = jsonResult.city.country
    cityCountry = cityName + ", " + countryName
-   // showMessage(cityId + "-name", cityCountry);
 
-   const forecastMap = getSummaryForecast(jsonResult.list);
+   const forecastMap = getSummaryForecast(jsonResult);
 
    let day = 0;
    for (const date in forecastMap) {
@@ -69,28 +24,52 @@ function displayForecast(cityId, jsonResult) {
 }
 
 // Return a map of objects with high, low, weather properties
-function getSummaryForecast(forecastList) {
-   const forecast5day = {};
-   forecastList.forEach(function (item) {
-      // Extract just the yyyy-mm-dd 
-      const date = item.dt_txt.substr(0, 10);
-      
-      const temp = item.main.temp;
+function getSummaryForecast(forecast) {
+   offset = forecast.city.timezone / 3600
+   forecastList = forecast.list
 
-      if (date in forecast5day) {
-         temp < forecast5day[date].low ? forecast5day[date].low = temp : 0
-         temp > forecast5day[date].high ? forecast5day[date].high = temp : 0
+   const tempFiveDaysFromToday = new Date()
+   tempFiveDaysFromToday.setDate(tempFiveDaysFromToday.getDate() + 5)
+   const fiveDaysFromToday = tempFiveDaysFromToday.toDateString()
+   const forecast5day = {};
+
+
+   for (item of forecastList) {
+      const gmtDateString = `${item.dt_txt.substr(0,10)}T${item.dt_txt.substr(11)}` 
+
+      localDate = new Date(gmtDateString)
+      localDate = new Date(localDate.setHours(localDate.getHours() + offset))
+
+      if (daysApart(localDate, fiveDaysFromToday) > 0) {
+         
+         const date = localDate.toLocaleDateString()
+         const temp = item.main.temp;
+
+         if (date in forecast5day) {
+            temp < forecast5day[date].low ? forecast5day[date].low = temp : 0
+            temp > forecast5day[date].high ? forecast5day[date].high = temp : 0
+         }
+         else {
+            const temps = {
+               high: temp,
+               low: temp,
+               weather: item.weather[0].main,
+               pop: item.pop
+            }         
+            forecast5day[date] = temps;
+         }
+      } else {
+         break;
       }
-      else {
-         const temps = {
-            high: temp,
-            low: temp,
-            weather: item.weather[0].main,
-            pop: item.pop
-         }         
-         forecast5day[date] = temps;
-      }
-   });
-   
+
+   }
    return forecast5day;
+}
+
+function daysApart(startDate, endDate) {
+   let start = new Date(startDate)
+   let end = new Date(endDate)
+   let timeDifference = end - start;
+   let daysDifference = timeDifference / (1000 * 3600 * 24)
+   return daysDifference
 }

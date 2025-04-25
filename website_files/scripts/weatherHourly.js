@@ -1,6 +1,4 @@
 function getWeatherForecasts() {
-   // weatherHourlyDate.innerHTML = new Date().toDateString() + " " + new Date().toTimeString().split(' ')[0]
-
    const cityHourly = document.getElementById("city-current").value.trim();
    const city = document.getElementById("city-current").value.trim();
 
@@ -18,13 +16,12 @@ function getWeatherForecasts() {
       showElement("loading-city");
       showMessage("loading-city", `Loading ${city}...`);
       hideElement("results-city");
-      
+
       getForecasts(cityHourly, "city-hourly", "city");
    }
 }
 
 async function getForecasts(city, cityId, cityIdX) {
-   // Create a URL to access the web API
    const queryString = "q=" + encodeURI(city) + ",US&units=imperial";
    const url = weatherProxyEndPoint + forecastEndpoint + "?" + queryString;
 
@@ -36,7 +33,7 @@ async function getForecasts(city, cityId, cityIdX) {
    if (response.ok) {
       const jsonResult = await response.json();
       displayHourly(cityId, jsonResult);
-      displayForecast(cityIdX, jsonResult);
+      display5Day(cityIdX, jsonResult);
    }
    else {
       const errorId = "error-loading-" + cityId;
@@ -48,17 +45,17 @@ async function getForecasts(city, cityId, cityIdX) {
 }
 
 function displayHourly(cityId, jsonResult) {
+   console.log("called 3")
    showElement("results-" + cityId);
 
    const cityName = jsonResult.city.name
    const countryName = jsonResult.city.country
    cityCountry = cityName + ", " + countryName
 
-   // showMessage(cityId + "-name", cityCountry);
-
    const hourlyMap = getSummaryHourly(jsonResult.list);
 
    let time = 0
+   // api timezone offset should change through the year
    let offset = jsonResult.city.timezone / 3600
    for (const hour in hourlyMap) { 
       timeForecast = new Date(jsonResult.list[time].dt_txt)
@@ -73,32 +70,7 @@ function displayHourly(cityId, jsonResult) {
       if (hourlyMap[hour].weather == "Rain" || hourlyMap[hour].weather == "Snow") {
          showMessage(`${cityId}${time}-pop`, (hourlyMap[hour].pop * 100) + '%');
       }
-
       time++
-   }
-}
-
-
-function displayForecast(cityId, jsonResult) {
-   showElement("results-" + cityId);
-
-   const cityName = jsonResult.city.name
-   const countryName = jsonResult.city.country
-   cityCountry = cityName + ", " + countryName
-   // showMessage(cityId + "-name", cityCountry);
-
-   const forecastMap = getSummaryForecast(jsonResult.list);
-
-   let day = 0;
-   for (const date in forecastMap) {
-      if (day <= 5) {
-         const dayForecast = forecastMap[date];
-         showMessage(`${cityId}-day${day}-name`, getDayName(date));
-         showMessage(`${cityId}-day${day}-high`, Math.round(dayForecast.high) + "&deg;");
-         showMessage(`${cityId}-day${day}-low`, Math.round(dayForecast.low) + "&deg;");
-         showImage(`${cityId}-day${day}-image`, dayForecast.weather);
-      }
-      day++;
    }
 }
 
@@ -116,32 +88,5 @@ function getSummaryHourly(hourlyList) {
       }
       forecastHourly[date] = temps
    });
-   
    return forecastHourly
-}
-
-// Return a map of objects with high, low, weather properties
-function getSummaryForecast(forecastList) {
-   const forecast5day = {};
-   forecastList.forEach(function (item) {
-      // Extract just the yyyy-mm-dd 
-      const date = item.dt_txt.substr(0, 10);
-      
-      const temp = item.main.temp;
-
-      if (date in forecast5day) {
-         temp < forecast5day[date].low ? forecast5day[date].low = temp : 0
-         temp > forecast5day[date].high ? forecast5day[date].high = temp : 0
-      }
-      else {
-         const temps = {
-            high: temp,
-            low: temp,
-            weather: item.weather[0].main
-         }         
-         forecast5day[date] = temps;
-      }
-   });
-   
-   return forecast5day;
 }
