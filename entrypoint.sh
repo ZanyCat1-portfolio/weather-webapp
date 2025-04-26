@@ -1,9 +1,13 @@
 #!/bin/sh
+envsubst < /www/config.template.js > /www/config.js
+envsubst < /etc/lighttpd/lighttpd.template.conf > /etc/lighttpd/lighttpd.conf
 
-# Start static server on 8078
-echo "Starting static server on port 8078..." >&2
+# Start static server on SERVER_PORT
+echo "Starting static server on port ${SERVER_PORT}..." >&2
 lighttpd -f /etc/lighttpd/lighttpd.conf -D &
 
-# Start API proxy server on 8077
-echo "Starting API proxy on port 8077..." >&2
-ncat -k -l 0.0.0.0 8077 -c /scripts/api-proxy.sh
+# Start API proxy server on API_PORT
+echo "Starting API proxy on port ${API_PORT}..." >&2
+ncat -k -l 0.0.0.0 $API_PORT -c /scripts/api-proxy.sh
+
+wait

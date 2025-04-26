@@ -5,7 +5,7 @@ FROM alpine:latest
 ## original directive
 ## RUN apk add --no-cache curl nmap-ncat bash
 ## adding nano for QOL dev feature
-RUN apk add --no-cache curl nmap-ncat bash nano lighttpd
+RUN apk add --no-cache curl nmap-ncat bash nano lighttpd gettext
 
 # Copy scripts
 COPY scripts/api-proxy.sh /scripts/api-proxy.sh
@@ -13,6 +13,7 @@ COPY entrypoint.sh /entrypoint.sh
 
 # Copy static files
 COPY website_files/ /www/
+COPY config.template.js /www/config.template.js
 
 # get api keys
 COPY api_keys/ api_keys/
@@ -24,7 +25,7 @@ RUN chmod +x /scripts/api-proxy.sh /entrypoint.sh
 EXPOSE 8077 8078
 
 # Copy custom lighttpd config
-COPY lighttpd.conf /etc/lighttpd/lighttpd.conf
+COPY lighttpd.template.conf /etc/lighttpd/lighttpd.template.conf
 
 # Start server
 ENTRYPOINT ["/entrypoint.sh"]

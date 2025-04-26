@@ -45,7 +45,6 @@ async function getForecasts(city, cityId, cityIdX) {
 }
 
 function displayHourly(cityId, jsonResult) {
-   console.log("called 3")
    showElement("results-" + cityId);
 
    const cityName = jsonResult.city.name

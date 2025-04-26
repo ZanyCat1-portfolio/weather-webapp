@@ -1,18 +1,6 @@
-// this is how we move between production and development
-   // /weather-api/ is production
-   // http:... is development
-   // const weatherProxyEndPoint = "/weather-api/";
-   // const weatherProxyEndPoint = "http://192.168.4.237:8077/";
-
-   const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-   const weatherProxyEndPoint = isLocalhost
-  ? 'http://192.168.4.237:8077/'   // local back-end during dev
-  : '/weather-api/';           // production proxy
-
-
-const weatherEndpoint = "openweathermap.org/data/2.5/weather";
-const forecastEndpoint = "openweathermap.org/data/2.5/forecast";
-const aqiEndpoint = "waqi.info/feed"
+const weatherEndpoint = "openweathermap/weather";
+const forecastEndpoint = "openweathermap/forecast";
+const aqiEndpoint = "waqi"
 
 weatherNowDate = document.getElementById("now-city-current")
 
