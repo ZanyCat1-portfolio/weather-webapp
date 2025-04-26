@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-    weatherProxyEndPoint: "$WEATHER_PROXY_ENDPOINT"
+    weatherProxyEndPoint: "${WEATHER_PROXY_ENDPOINT}"
 }

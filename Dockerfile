@@ -21,9 +21,6 @@ COPY api_keys/ api_keys/
 # Make executable
 RUN chmod +x /scripts/api-proxy.sh /entrypoint.sh
 
-# Expose port
-EXPOSE 8077 8078
-
 # Copy custom lighttpd config
 COPY lighttpd.template.conf /etc/lighttpd/lighttpd.template.conf
 
