@@ -4,8 +4,7 @@ FROM alpine:latest
 
 ## original directive
 ## RUN apk add --no-cache curl nmap-ncat bash
-## adding nano for QOL dev feature
-RUN apk add --no-cache curl nmap-ncat bash nano lighttpd gettext
+RUN apk add --no-cache curl nmap-ncat bash lighttpd gettext
 
 # Copy scripts
 COPY scripts/api-proxy.sh /scripts/api-proxy.sh
